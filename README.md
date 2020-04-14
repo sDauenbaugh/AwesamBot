@@ -1,30 +1,32 @@
-# RLBotPythonExample
-Example of a python bot using the RLBot framework
+# AwesamBot
 
-## Quick Start
-The easiest way to start a python bot is demonstrated here!
-https://youtu.be/YJ69QZ-EX7k
+## Author
 
-It shows you how to:
-- Install the RLBot GUI
-- Use it to create a new bot
+- Sam Dauenbaugh
 
-## Changing the bot
+## Bot Overview
+
+This bot operates through a state machine model.
 
 - Bot behavior is controlled by `src/bot.py`
 - Bot appearance is controlled by `src/appearance.cfg`
+- States are contained in `src/states/`
+- Controllers are contained in `src/controllers/`
 
-See https://github.com/RLBot/RLBotPythonExample/wiki for documentation and tutorials.
+## State Overview
 
-### Older Setup Technique
+This section outlines the intended behavior of each implemented state.
 
-**Please don't do this unless you've followed the quick start video and it doesn't work!**
+### Ball Chase
 
-https://www.youtube.com/watch?v=UjsQFNN0nSA
+This state causes the bot to drive directly toward the ball at all times. This is the default state of the bot, and so it will cede control to any other state.
+The ground controller is the only controller used by this state.
 
-1. Make sure you've installed [Python 3.7 64 bit](https://www.python.org/ftp/python/3.7.4/python-3.7.4-amd64.exe). During installation:
-   - Select "Add Python to PATH"
-   - Make sure pip is included in the installation
-1. Download or clone this repository
-1. In the files from the previous step, find and double click on run-gui.bat
-1. Click the 'Run' button
+## Controller Overview
+
+This section outlines the basic use case for each controller. The purpose of a controller is to dictate how the bot moves to achieve the goal governed by the state.
+
+### Ground Controller
+
+The ground controller is the most basic controller available. It operates by turning the bot directly toward a target location and then moving to that location. There is no
+boost or drifting in this controller and the controller will not attempt to leave the ground.
