@@ -1,11 +1,12 @@
 import math
+import numpy as np
 
 from rlbot.agents.base_agent import BaseAgent, SimpleControllerState
 from rlbot.utils.structures.game_data_struct import GameTickPacket
 
 from src.util.orientation import Orientation, relative_location
 from src.util.vec import Vec3
-from src.util.util import predict_ball_path, sign
+from src.util.util import predict_ball_path, sign, turn_radius
 
 from src.controllers.groundController import groundController
 
@@ -155,4 +156,24 @@ def draw_debug(renderer, car, ball, action_display, ball_path = None):
     renderer.draw_string_3d(car.physics.location, 2, 2, action_display, renderer.white())
     #draw the ball's predicted path
     renderer.draw_polyline_3d(ball_path, renderer.red())
+    #draw turn radius at current velocity
+    renderer.draw_polyline_3d(getTurnCircle(car.physics), renderer.blue())
+    
     renderer.end_rendering()
+
+def getTurnCircle(car):
+    """Generates a list of tuples containing the coordinates for the smallest turn available to the car"""
+    #TODO change from np.cos and np.sin to a lookup table for better efficiency
+    radius = turn_radius(Vec3(car.velocity).length())
+    ground_velocity = Vec3(car.velocity).flat()
+    ground_location = Vec3(car.location).flat()
+    right_center = ground_location + (ground_velocity.rotate90().normalized() * radius)
+    left_center = ground_location + (ground_velocity.rotate90(-1).normalized() * radius)
+    #right eqn. --> (x-right_center.x)^2 + (y-right_center.y)^2 = radius^2
+    #left eqn. --> (x-left_center.x)^2 + (y-left_center.y)^2 = radius^2
+    theta = np.arange(0, 2*np.pi, np.pi/8)
+    x = radius*np.cos(theta)
+    y = radius*np.sin(theta)
+    rightLoop = tuple(zip(x+right_center.x,y+right_center.y))
+    leftLoop = tuple(zip(x+left_center.x,y+left_center.y))
+    return rightLoop + leftLoop

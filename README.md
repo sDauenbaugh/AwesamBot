@@ -1,8 +1,6 @@
 # AwesamBot
 
-## Author
-
-- Sam Dauenbaugh
+## Author: Sam Dauenbaugh
 
 ## Bot Overview
 

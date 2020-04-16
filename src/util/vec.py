@@ -74,6 +74,8 @@ class Vec3:
 
     def normalized(self):
         """Returns a vector with the same direction but a length of one."""
+        if(self.length() == 0):
+            return Vec3(0,0,0)
         return self / self.length()
 
     def rescale(self, new_len: float) -> 'Vec3':
@@ -100,3 +102,11 @@ class Vec3:
     #returns the Vector3 as a python triple
     def to_triple(self):
         return [self.x, self.y, self.z]
+
+    def rotate90(self, direction = 1):
+        rotated = Vec3(self.y, self.x, self.z)
+        if(direction == -1):
+            rotated.x = rotated.x * -1
+        else:
+            rotated.y = rotated.y * -1
+        return rotated
