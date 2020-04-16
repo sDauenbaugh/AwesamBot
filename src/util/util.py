@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 from src.util.vec import Vec3
 
@@ -137,4 +138,11 @@ def back_wall_intersect(velocity: Vec3, location: Vec3):
     intersect = location + velocity * time
     return intersect
 
+def generateSinLookup(rads):
+    theta = np.arange(0, 2*np.pi, rads)
+    return np.sin(theta)
+
+def generateCosLookup(rads):
+    theta = np.arange(0, 2*np.pi, rads)
+    return np.cos(theta)
     

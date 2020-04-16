@@ -6,7 +6,7 @@ from rlbot.utils.structures.game_data_struct import GameTickPacket
 
 from src.util.orientation import Orientation, relative_location
 from src.util.vec import Vec3
-from src.util.util import predict_ball_path, sign, turn_radius
+import src.util.util as util
 
 from src.controllers.groundController import groundController
 
@@ -76,6 +76,9 @@ class MyBot(BaseAgent):
         #self.controller = groundController()
         self.stateMessage = "Whoops"
 
+        self.sinLookup = util.generateSinLookup(np.pi/8)
+        self.cosLookup = util.generateCosLookup(np.pi/8)
+
     def get_output(self, gamePacket: GameTickPacket) -> SimpleControllerState:
         """Calculates the next set of commands for the bot.
         
@@ -95,13 +98,13 @@ class MyBot(BaseAgent):
         self.stateMessage = "Chasing"
         controller_state = groundController(self, self.ball.local_location)
         
-        team = sign(self.team)
-        ball_side = sign(self.ball.location.y)
+        team = util.sign(self.team)
+        ball_side = util.sign(self.ball.location.y)
         
         my_car = gamePacket.game_cars[self.index]
         message = f"{self.stateMessage} | Team {team} | Ball {ball_side} "
         action_display = message
-        ball_path = predict_ball_path(self)
+        ball_path = util.predict_ball_path(self)
         draw_debug(self.renderer, my_car, gamePacket.game_ball, action_display, ball_path)
 
         return controller_state
@@ -164,7 +167,7 @@ def draw_debug(renderer, car, ball, action_display, ball_path = None):
 def getTurnCircle(car):
     """Generates a list of tuples containing the coordinates for the smallest turn available to the car"""
     #TODO change from np.cos and np.sin to a lookup table for better efficiency
-    radius = turn_radius(Vec3(car.velocity).length())
+    radius = util.turn_radius(Vec3(car.velocity).length())
     ground_velocity = Vec3(car.velocity).flat()
     ground_location = Vec3(car.location).flat()
     right_center = ground_location + (ground_velocity.rotate90().normalized() * radius)

@@ -60,6 +60,14 @@ class Vec3:
     def __str__(self):
         return "Vec3(" + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + ")"
 
+    def __eq__(self, v):
+        if(self.x == v.x and self.y == v.y and self.z == v.z):
+            return True
+        return False
+    
+    def __ne__(self, v):
+        return not self == v
+
     def flat(self):
         """Returns a new Vec3 that equals this Vec3 but projected onto the ground plane. I.e. where z=0."""
         return Vec3(self.x, self.y, 0)
