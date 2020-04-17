@@ -76,8 +76,8 @@ class MyBot(BaseAgent):
         #self.controller = groundController()
         self.stateMessage = "Whoops"
 
-        self.sinLookup = util.generateSinLookup(np.pi/8)
-        self.cosLookup = util.generateCosLookup(np.pi/8)
+        #self.sinLookup = util.generateSinLookup(np.pi/16)
+        #self.cosLookup = util.generateCosLookup(np.pi/16)
 
     def get_output(self, gamePacket: GameTickPacket) -> SimpleControllerState:
         """Calculates the next set of commands for the bot.
@@ -105,7 +105,8 @@ class MyBot(BaseAgent):
         message = f"{self.stateMessage} | Team {team} | Ball {ball_side} "
         action_display = message
         ball_path = util.predict_ball_path(self)
-        draw_debug(self.renderer, my_car, gamePacket.game_ball, action_display, ball_path)
+        turn_loops = getTurnCircle(self.me.velocity, self.me.location)
+        draw_debug(self.renderer, my_car, gamePacket.game_ball, action_display, ball_path, turn_loops)
 
         return controller_state
     
@@ -138,7 +139,7 @@ class MyBot(BaseAgent):
         self.ball.local_location = relative_location(self.me.location, self.me.rotation, self.ball.location)
 
 
-def draw_debug(renderer, car, ball, action_display, ball_path = None):
+def draw_debug(renderer, car, ball, action_display, ball_path, turns):
     """Draws debug information on screen.
     
     Args:
@@ -159,24 +160,28 @@ def draw_debug(renderer, car, ball, action_display, ball_path = None):
     renderer.draw_string_3d(car.physics.location, 2, 2, action_display, renderer.white())
     #draw the ball's predicted path
     renderer.draw_polyline_3d(ball_path, renderer.red())
+    renderer.end_rendering() #stop rendering to avoid render limit
     #draw turn radius at current velocity
-    renderer.draw_polyline_3d(getTurnCircle(car.physics), renderer.blue())
+    renderer.begin_rendering()
+    renderer.draw_polyline_3d(turns, renderer.blue())
     
     renderer.end_rendering()
 
-def getTurnCircle(car):
+def getTurnCircle(velocity, location):
     """Generates a list of tuples containing the coordinates for the smallest turn available to the car"""
-    #TODO change from np.cos and np.sin to a lookup table for better efficiency
-    radius = util.turn_radius(Vec3(car.velocity).length())
-    ground_velocity = Vec3(car.velocity).flat()
-    ground_location = Vec3(car.location).flat()
-    right_center = ground_location + (ground_velocity.rotate90().normalized() * radius)
+    radius = util.turn_radius(velocity.length())
+    ground_velocity = velocity.flat()
+    ground_location = location.flat()
+    #calcuate phase offset
+    unit_location = ground_velocity.rotate90().normalized()
+    phi = np.arctan2(unit_location.y, -unit_location.x)
+    #calculate center offset
+    right_center = ground_location + (unit_location * radius)
     left_center = ground_location + (ground_velocity.rotate90(-1).normalized() * radius)
-    #right eqn. --> (x-right_center.x)^2 + (y-right_center.y)^2 = radius^2
-    #left eqn. --> (x-left_center.x)^2 + (y-left_center.y)^2 = radius^2
-    theta = np.arange(0, 2*np.pi, np.pi/8)
+    #calculate points
+    theta = np.arange(phi, 2*np.pi - phi, np.pi/16)
     x = radius*np.cos(theta)
-    y = radius*np.sin(theta)
+    y = radius*np.sin(theta + np.pi)
     rightLoop = tuple(zip(x+right_center.x,y+right_center.y))
     leftLoop = tuple(zip(x+left_center.x,y+left_center.y))
     return rightLoop + leftLoop
