@@ -181,7 +181,7 @@ def getTurnCircle(velocity, location):
     #calculate points
     theta = np.arange(phi, 2*np.pi - phi, np.pi/16)
     x = radius*np.cos(theta)
-    y = radius*np.sin(theta + np.pi)
+    y = radius*np.sin(theta)
     rightLoop = tuple(zip(x+right_center.x,y+right_center.y))
     leftLoop = tuple(zip(x+left_center.x,y+left_center.y))
     return rightLoop + leftLoop
