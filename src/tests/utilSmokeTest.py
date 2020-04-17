@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 
 import src.util.util as util
 
@@ -12,3 +13,24 @@ class UtilSmokeTestCase(unittest.TestCase):
         v = 2435.7
         radius = util.turn_radius(v)
         self.assertEquals(round(radius, 4), 1211.0643)
+
+    def test_sign_positive(self):
+        self.assertEquals(util.sign(5), 1)
+    
+    def test_sign_negative(self):
+        self.assertEquals(util.sign(-5), -1)
+    
+    def test_sign_zero(self):
+        self.assertEquals(util.sign(0), -1)
+    
+    def test_sin_lookup(self):
+        lookup = np.round(util.generateSinLookup(np.pi/4), 4)
+        root = 1/np.sqrt(2)
+        table = np.round(np.array([0.00, root, 1.00, root, 0.00, -root, -1, -root]), 4)
+        self.assertTrue(np.array_equal(lookup, table))
+
+    def test_cos_lookup(self):
+        lookup = np.round(util.generateCosLookup(np.pi/4), 4)
+        root = 1/np.sqrt(2)
+        table = np.round(np.array([1.00, root, 0.00, -root, -1.00, -root, 0.00, root]), 4)
+        self.assertTrue(np.array_equal(lookup, table))
