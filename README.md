@@ -2,6 +2,8 @@
 
 ## Author: Sam Dauenbaugh
 
+See my previous bot, FirstBot, [here](www.github.com/sDauenbaugh/FirstBot).
+
 ## Bot Overview
 
 This bot operates through a state machine model.
@@ -28,3 +30,21 @@ This section outlines the basic use case for each controller. The purpose of a c
 
 The ground controller is the most basic controller available. It operates by turning the bot directly toward a target location and then moving to that location. There is no
 boost or drifting in this controller and the controller will not attempt to leave the ground.
+
+## States In Development
+
+### Calcshot
+
+This state will make the bot flip into the ball to take a shot toward the opponent's goal.
+
+### DefendBasec
+
+This state will hit the ball away from it's own net.
+
+### GetBack
+
+This state will return the bot to a defensive position in goal.
+
+### GetBoost
+
+This state will grab the boost based on how much boost the bot has, where boost pads are, and where the ball is.
