@@ -1,6 +1,8 @@
 import math
 import numpy as np
 
+from src.states.ballchase import BallChase
+
 from rlbot.agents.base_agent import BaseAgent, SimpleControllerState
 from rlbot.utils.structures.game_data_struct import GameTickPacket
 
@@ -72,7 +74,7 @@ class MyBot(BaseAgent):
         self.me = Car()
         self.ball = Ball()
         
-        #self.state = BallChase
+        self.state = BallChase()
         #self.controller = groundController()
         self.stateMessage = "Whoops"
 
@@ -94,9 +96,10 @@ class MyBot(BaseAgent):
         """
         self.preprocess(gamePacket)
                 
-        #self.state = BallChase()
+        if(self.state.checkExpire()):
+            self.state = BallChase()
         self.stateMessage = "Chasing"
-        controller_state = groundController(self, self.ball.local_location)
+        controller_state = groundController(self, self.state.execute(self))
         
         team = util.sign(self.team)
         ball_side = util.sign(self.ball.location.y)
@@ -162,10 +165,9 @@ def draw_debug(renderer, car, ball, action_display, ball_path, turns):
     renderer.draw_polyline_3d(ball_path, renderer.red())
     renderer.end_rendering() #stop rendering to avoid render limit
     #draw turn radius at current velocity
-    renderer.begin_rendering()
-    renderer.draw_polyline_3d(turns, renderer.blue())
-    
-    renderer.end_rendering()
+    #renderer.begin_rendering()
+    #renderer.draw_polyline_3d(turns, renderer.blue())
+    #renderer.end_rendering()
 
 def getTurnCircle(velocity, location):
     """Generates a list of tuples containing the coordinates for the smallest turn available to the car"""
