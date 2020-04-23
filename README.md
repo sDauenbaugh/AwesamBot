@@ -37,7 +37,7 @@ boost or drifting in this controller and the controller will not attempt to leav
 
 This state will make the bot flip into the ball to take a shot toward the opponent's goal.
 
-### DefendBasec
+### DefendBasic
 
 This state will hit the ball away from it's own net.
 
