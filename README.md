@@ -2,7 +2,7 @@
 
 ## Author: Sam Dauenbaugh
 
-See my previous bot, FirstBot, [here](www.github.com/sDauenbaugh/FirstBot).
+See my previous bot, FirstBot, [here](https://www.github.com/sDauenbaugh/FirstBot).
 
 ## Bot Overview
 
