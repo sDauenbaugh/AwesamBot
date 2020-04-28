@@ -99,7 +99,7 @@ class MyBot(BaseAgent):
         if(self.state.checkExpire()):
             self.state = BallChase()
         self.stateMessage = "Chasing"
-        controller_state = groundController(self, self.state.execute(self))
+        controller_state = groundController(self, self.state.execute(self.me, self.ball))
         
         team = util.sign(self.team)
         ball_side = util.sign(self.ball.location.y)

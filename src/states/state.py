@@ -21,10 +21,10 @@ class State():
         """Creates a new unexpired state"""
         self.expired = False
     
-    def execute(self, agent):
+    def execute(self, me, ball):
         """Executes the State's behavior.
         
-        This function must be overridden by other States.
+        This function must be overridden by other States. If it is not overriden then the bot will do nothing.
         
         Attributes:
             agent (BaseAgent): The bot
@@ -37,7 +37,7 @@ class State():
         pass
     
     def checkAvailable(self, agent):
-        """Checks to see if the state is available. The default state is unavailable
+        """Checks to see if the state is available. If not overriden, the default state is unavailable
         
         Attributes:
             agent (BaseAgent): the bot

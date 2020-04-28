@@ -26,7 +26,7 @@ class BallChase(State):
         if self.ticks > 10:
             self.expired = True
     
-    def execute(self, agent):
+    def execute(self, me, ball):
         """Attempts to drive the car toward the ball.
         
         Overrides the State class's execute function. The ground controller is automatically used and the target 
@@ -41,7 +41,6 @@ class BallChase(State):
         """
         self.checkExpire()
         
-        State.execute(self, agent)
-        target_location = agent.ball.local_location
+        target_location = ball.local_location
         
         return target_location
