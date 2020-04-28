@@ -15,12 +15,15 @@ This bot operates through a state machine model.
 
 ## State Overview
 
-This section outlines the intended behavior of each implemented state.
+This section outlines the intended behavior of each implemented state. States are immutable objects held by the bot to determine functionality. The bot is responsible for selecting a state, and the state is responsible for giving a set of commands to achieve it's goal.
 
 ### Ball Chase
 
-This state causes the bot to drive directly toward the ball at all times. This is the default state of the bot, and so it will cede control to any other state.
-The ground controller is the only controller used by this state.
+This state causes the bot to drive directly toward the ball at all times. This is the default state of the bot, and so it will cede control to any other state. The ground controller is the only controller used by this state.
+
+### Basic Defend
+
+In this defensive state the bot will try to push the ball off to the side. This is intended for when the ball is moving toward the net and no other defensive state can be triggered. The ground controller is the default controller for this state.
 
 ## Controller Overview
 
@@ -28,18 +31,13 @@ This section outlines the basic use case for each controller. The purpose of a c
 
 ### Ground Controller
 
-The ground controller is the most basic controller available. It operates by turning the bot directly toward a target location and then moving to that location. There is no
-boost or drifting in this controller and the controller will not attempt to leave the ground.
+The ground controller is the most basic controller available. It operates by turning the bot directly toward a target location and then moving to that location. This controller does not attempt to conserve boost, flip, jump, or aerial.
 
 ## States In Development
 
 ### Calcshot
 
 This state will make the bot flip into the ball to take a shot toward the opponent's goal.
-
-### DefendBasic
-
-This state will hit the ball away from it's own net.
 
 ### GetBack
 
