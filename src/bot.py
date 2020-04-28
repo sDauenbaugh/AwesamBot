@@ -2,6 +2,7 @@ import math
 import numpy as np
 
 from src.states.ballchase import BallChase
+from src.states.defendbasic import Defend
 
 from rlbot.agents.base_agent import BaseAgent, SimpleControllerState
 from rlbot.utils.structures.game_data_struct import GameTickPacket
@@ -104,8 +105,12 @@ class MyBot(BaseAgent):
         controller_state = self.state.execute(gameInfo)
                 
         if(self.state.getExpired(gameInfo)):
-            self.state = BallChase()
-        self.stateMessage = "Chasing"
+            if(util.sign(self.ball.location.y) == util.sign(self.me.team)):
+                self.state = Defend()
+                self.stateMessage = "Defending"
+            else:
+                self.state = BallChase()
+                self.stateMessage = "Chasing"
         
         team = util.sign(self.team)
         ball_side = util.sign(self.ball.location.y)

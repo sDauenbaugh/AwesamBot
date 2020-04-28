@@ -15,13 +15,10 @@ class BallChase(State):
     def __init__(self):
         """Creates an unexpired instance of BallChase"""
         super().__init__()
-        self.ticks = 0
         
     def getExpired(self, gameInfo):
         """Determines if the state is no longer useful"""
-        self.ticks = self.ticks + 1
-        if self.ticks > 10:
-            self.expired = True
+        return True
     
     def execute(self, gameInfo):
         """Attempts to drive the car toward the ball.
