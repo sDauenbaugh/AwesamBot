@@ -9,6 +9,7 @@ from rlbot.utils.structures.game_data_struct import GameTickPacket
 from src.util.orientation import Orientation, relative_location
 from src.util.vec import Vec3
 import src.util.util as util
+from src.util.gameinformation import GameInformation
 
 from src.controllers.groundController import groundController
 
@@ -44,6 +45,7 @@ class Car(GameObject):
         """Creates a new Car object with zero boost."""
         super().__init__()
         self.boost = 0.0
+        self.team = -1
     
 
 class Ball(GameObject):
@@ -95,11 +97,15 @@ class MyBot(BaseAgent):
             
         """
         self.preprocess(gamePacket)
+
+        gameInfo = GameInformation(self.me, self.ball)
+
+        self.state = BallChase()
+        controller_state = self.state.execute(gameInfo)
                 
-        if(self.state.checkExpire()):
+        if(self.state.getExpired(gameInfo)):
             self.state = BallChase()
         self.stateMessage = "Chasing"
-        controller_state = groundController(self, self.state.execute(self.me, self.ball))
         
         team = util.sign(self.team)
         ball_side = util.sign(self.ball.location.y)
@@ -132,6 +138,7 @@ class MyBot(BaseAgent):
         self.me.rotation = Orientation(gamePacket.game_cars[self.index].physics.rotation)
         self.me.rvelocity = Vec3(gamePacket.game_cars[self.index].physics.angular_velocity)
         self.me.boost = gamePacket.game_cars[self.index].boost
+        self.me.team = self.team
         
         #load data about the ball
         self.ball.location = Vec3(gamePacket.game_ball.physics.location)

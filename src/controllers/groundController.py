@@ -2,7 +2,7 @@ import math
 
 from rlbot.agents.base_agent import SimpleControllerState
 
-def groundController(agent, target_location):
+def groundController(gameInfo, target_location):
     """Gives a set of commands to move the car along the ground toward a target location
     
     Attributes:
@@ -41,7 +41,7 @@ def groundController(agent, target_location):
     #if far away, move at full speed forward
     elif distance >= r2:
         speed = 1.0
-        if agent.me.velocity.length() < 2250:
+        if gameInfo.me.velocity.length() < 2250:
             controllerState.boost = True
         if(angle > math.pi/32):
             turn_rate = -1.0
@@ -55,7 +55,7 @@ def groundController(agent, target_location):
         elif(angle < -math.pi/32):
             turn_rate = 1.0
         #adjust speed
-        if agent.me.velocity.length() < 2250:
+        if gameInfo.me.velocity.length() < 2250:
             controllerState.boost = True
         if abs(angle) < math.pi / 2:
             speed = 1.0

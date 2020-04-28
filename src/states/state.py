@@ -1,9 +1,11 @@
+from src.util.gameinformation import GameInformation
+
 class State():
     """State objects dictate the bot's current objective.
     
-    These objects are used to control the behavior of the bot at a high level. States are reponsible for determining
-    which controller to use as well as what actions the car needs to take. States do not directly determine controller inputs.
-    State names should be descriptive and unique.
+    State objects are intended to be immutable, as they do not have any instance variables that need to be canged. The only reason these are implemented as a class
+    rather than a module is for easier tracking of active states. States are used to determine the behavior and commands necessary for a bot. The state itself does
+    not determine which state should be used if itself is no longer useful.
     
     Currently Implemented States:
         BallChase
@@ -20,8 +22,11 @@ class State():
     def __init__(self):
         """Creates a new unexpired state"""
         self.expired = False
+
+    def getExpired(self, GameInformation):
+        """Checks to see if the state is still useful under current conditions"""
     
-    def execute(self, me, ball):
+    def execute(self, GameInformation):
         """Executes the State's behavior.
         
         This function must be overridden by other States. If it is not overriden then the bot will do nothing.
@@ -35,15 +40,3 @@ class State():
             
         """
         pass
-    
-    def checkAvailable(self, agent):
-        """Checks to see if the state is available. If not overriden, the default state is unavailable
-        
-        Attributes:
-            agent (BaseAgent): the bot
-        
-        Returns:
-            bool: False unless overridden. True means available, false means unavailable.
-        
-        """
-        return False

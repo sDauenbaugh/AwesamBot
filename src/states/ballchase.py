@@ -1,6 +1,7 @@
 from src.states.state import State
 
 from rlbot.agents.base_agent import SimpleControllerState
+from src.controllers.groundController import groundController
 
 class BallChase(State):
     """BallChase aims to drive the car straight toward the ball
@@ -16,17 +17,13 @@ class BallChase(State):
         super().__init__()
         self.ticks = 0
         
-    def checkAvailable(self, agent):
-        """This state is always available"""
-        return True
-        
-    def checkExpire(self):
+    def getExpired(self, gameInfo):
         """Determines if the state is no longer useful"""
         self.ticks = self.ticks + 1
         if self.ticks > 10:
             self.expired = True
     
-    def execute(self, me, ball):
+    def execute(self, gameInfo):
         """Attempts to drive the car toward the ball.
         
         Overrides the State class's execute function. The ground controller is automatically used and the target 
@@ -39,8 +36,6 @@ class BallChase(State):
             target_location: the location to give the bot.
             
         """
-        self.checkExpire()
         
-        target_location = ball.local_location
-        
-        return target_location
+        target_location = gameInfo.ball.local_location
+        return groundController(gameInfo, target_location)
