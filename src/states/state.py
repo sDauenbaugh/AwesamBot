@@ -1,6 +1,7 @@
-from src.util.gameinformation import GameInformation
+from util.gameinformation import GameInformation
 
-class State():
+
+class State:
     """State objects dictate the bot's current objective.
     
     State objects are intended to be immutable, as they do not have any instance variables that need to be canged. The only reason these are implemented as a class
@@ -23,16 +24,17 @@ class State():
         """Creates a new unexpired state"""
         self.expired = False
 
-    def getExpired(self, GameInformation):
+    def get_expired(self, game_info: GameInformation):
         """Checks to see if the state is still useful under current conditions"""
+        self.expired = True
     
-    def execute(self, GameInformation):
+    def execute(self, game_info: GameInformation):
         """Executes the State's behavior.
         
         This function must be overridden by other States. If it is not overriden then the bot will do nothing.
         
         Attributes:
-            agent (BaseAgent): The bot
+            game_info: information detailing the current status of various game objects
             
         Returns:
             Nothing.

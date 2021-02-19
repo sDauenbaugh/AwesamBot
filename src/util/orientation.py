@@ -1,6 +1,6 @@
 import math
 
-from src.util.vec import Vec3
+from util.vec import Vec3
 from rlbot.messages.flat.ControllerState import ControllerStateAddYaw
 
 

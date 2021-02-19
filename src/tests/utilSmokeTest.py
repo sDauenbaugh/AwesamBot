@@ -3,6 +3,7 @@ import numpy as np
 
 import src.util.util as util
 
+
 class UtilSmokeTestCase(unittest.TestCase):
     def test_turn_radius_slow(self):
         v = 200.0
@@ -24,13 +25,13 @@ class UtilSmokeTestCase(unittest.TestCase):
         self.assertEquals(util.sign(0), -1)
     
     def test_sin_lookup(self):
-        lookup = np.round(util.generateSinLookup(np.pi/4), 4)
+        lookup = np.round(util.generate_sin_lookup(np.pi/4), 4)
         root = 1/np.sqrt(2)
         table = np.round(np.array([0.00, root, 1.00, root, 0.00, -root, -1, -root]), 4)
         self.assertTrue(np.array_equal(lookup, table))
 
     def test_cos_lookup(self):
-        lookup = np.round(util.generateCosLookup(np.pi/4), 4)
+        lookup = np.round(util.generate_cos_lookup(np.pi/4), 4)
         root = 1/np.sqrt(2)
         table = np.round(np.array([1.00, root, 0.00, -root, -1.00, -root, 0.00, root]), 4)
         self.assertTrue(np.array_equal(lookup, table))

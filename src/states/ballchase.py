@@ -1,7 +1,9 @@
-from src.states.state import State
+from util.gameinformation import GameInformation
+from states.state import State
 
 from rlbot.agents.base_agent import SimpleControllerState
-from src.controllers.groundController import groundController
+from controllers.groundController import ground_controller
+
 
 class BallChase(State):
     """BallChase aims to drive the car straight toward the ball
@@ -16,23 +18,23 @@ class BallChase(State):
         """Creates an unexpired instance of BallChase"""
         super().__init__()
         
-    def getExpired(self, gameInfo):
+    def get_expired(self, game_info: GameInformation):
         """Determines if the state is no longer useful"""
         return True
     
-    def execute(self, gameInfo):
+    def execute(self, game_info: GameInformation):
         """Attempts to drive the car toward the ball.
         
         Overrides the State class's execute function. The ground controller is automatically used and the target 
         location is set to the ball's current location.
         
         Attributes:
-            agent (BaseAgent): The bot
+            game_info: information detailing the current status of various game objects
             
         Returns:
             target_location: the location to give the bot.
             
         """
         
-        target_location = gameInfo.ball.local_location
-        return groundController(gameInfo, target_location)
+        target_location = game_info.ball.local_location
+        return ground_controller(game_info, target_location)

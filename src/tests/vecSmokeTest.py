@@ -3,6 +3,7 @@ import numpy as np
 
 from src.util.vec import Vec3
 
+
 class VecSmokeTestCase(unittest.TestCase):
     def setUp(self):
         self.vecx = Vec3(10, 0, 0)

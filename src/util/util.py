@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-from src.util.vec import Vec3
+from util.vec import Vec3
 
 """Field Dimensions"""
 FIELD_LENGTH = 10240 #uu
@@ -52,6 +52,7 @@ BALL_RESTITUTION_COEFFIECIENT = 0.6
 TEAM_ORANGE = 1
 TEAM_BLUE = 0
 
+
 def predict_ball_path(agent):
     """Predicts the path of the ball using the rlBot framework
     
@@ -72,6 +73,7 @@ def predict_ball_path(agent):
     
     return locations
 
+
 def turn_radius(velocity):
     """Calculates the turn radius of a car given a speed
     
@@ -88,6 +90,7 @@ def turn_radius(velocity):
         return 0
     return 1.0 / turn_radius_helper(velocity)
 
+
 def turn_radius_helper(v):
     """Helper function for turn_radius"""
     if 0.0 <= v < 500.0:
@@ -102,14 +105,16 @@ def turn_radius_helper(v):
         return 0.001800 - 0.40e-6 * v
     else:
         return 0.0
-    
+
+
 def sign(x):
     """Returns the sign of a number"""
     if x <= 0:
         return -1
     else:
         return 1
-    
+
+
 def back_wall_intersect(velocity: Vec3, location: Vec3):
     """Gets an object's point of intersection with the back wall
     
@@ -132,17 +137,19 @@ def back_wall_intersect(velocity: Vec3, location: Vec3):
     
     """
     if math.fabs(velocity.y) < 0.1:
-        return Vec3(0,0,0)
+        return Vec3(0, 0, 0)
     wall = GOAL_UNIT_NORMAL * (FIELD_LENGTH / 2) * sign(velocity.y)
     time = (wall.y - location.y) / velocity.y
     intersect = location + velocity * time
     return intersect
 
-def generateSinLookup(rads):
+
+def generate_sin_lookup(rads):
     theta = np.arange(0, 2*np.pi, rads)
     return np.sin(theta)
 
-def generateCosLookup(rads):
+
+def generate_cos_lookup(rads):
     theta = np.arange(0, 2*np.pi, rads)
     return np.cos(theta)
     
