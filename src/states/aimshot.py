@@ -14,7 +14,7 @@ class AimShot(State):
         """Creates an instance of AimShot"""
         super().__init__()
 
-    def get_expired(self, game_info: GameInformation):
+    def check_expired(self, game_info: GameInformation):
         """If the ball is not reasonably close to being between the car and the goal, the state expires"""
         ball_direction = game_info.ball.local_location
         goal_location = relative_location(game_info.me.location, game_info.me.rotation,
@@ -25,7 +25,6 @@ class AimShot(State):
         return True
 
     def execute(self, game_info):
-        team = util.sign(game_info.team)
-        self.expired = self.checkExpired(game_info, team)
+        team = util.sign(game_info.me.team)
 
         return hit_controller(game_info, util.GOAL_HOME * team * -1)

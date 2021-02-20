@@ -23,10 +23,12 @@ class State:
     def __init__(self):
         """Creates a new unexpired state"""
         self.expired = False
+        self.debug = {'target': (0, 0, 0)}
 
-    def get_expired(self, game_info: GameInformation):
+    def check_expired(self, game_info: GameInformation) -> bool:
         """Checks to see if the state is still useful under current conditions"""
         self.expired = True
+        return self.expired
     
     def execute(self, game_info: GameInformation):
         """Executes the State's behavior.
@@ -42,3 +44,6 @@ class State:
             
         """
         pass
+
+    def get_debug(self):
+        return self.debug

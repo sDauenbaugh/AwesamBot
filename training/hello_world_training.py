@@ -16,7 +16,7 @@ from drive_to_ball_grader import DriveToBallGrader
 
 def make_match_config_with_my_bot() -> MatchConfig:
     # Makes a config which only has our bot in it for now.
-    # For more defails: https://youtu.be/uGFmOZCpel8?t=375
+    # For more details: https://youtu.be/uGFmOZCpel8?t=375
     match_config = make_empty_match_config()
     match_config.player_configs = [
         PlayerConfig.bot_config(
@@ -25,6 +25,17 @@ def make_match_config_with_my_bot() -> MatchConfig:
         ),
     ]
     return match_config
+
+
+def add_my_bot_to_playlist(exercises: Playlist) -> Playlist:
+    """
+    Updates the match config for each excercise to include
+    the bot from this project
+    """
+    for exercise in exercises:
+        exercise.match_config = make_match_config_with_my_bot()
+    return exercises
+
 
 @dataclass
 class StrikerPatience(StrikerExercise):
@@ -90,7 +101,4 @@ def make_default_playlist() -> Playlist:
         DrivesToBallExercise('Get close to ball'),
         DrivesToBallExercise('Get close-ish to ball', grader=DriveToBallGrader(min_dist_to_pass=1000))
     ]
-    for exercise in exercises:
-        exercise.match_config = make_match_config_with_my_bot()
-
-    return exercises
+    return add_my_bot_to_playlist(exercises)

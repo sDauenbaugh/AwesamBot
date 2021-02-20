@@ -30,7 +30,7 @@ def hit_controller(game_info, hit_target):
     elif ball_angle < -math.pi:
         ball_angle += 2 * math.pi
     # get target distance and angle from ball
-    ball_to_target = game_info - game_info.ball.location
+    ball_to_target = hit_target - game_info.ball.location
     target_distance = ball_to_target.length()
     ball_to_target_unit = ball_to_target.normalized()
     flip_ready = False

@@ -72,6 +72,7 @@ target/
 
 # pyenv
 .python-version
+.pylintrc
 
 # celery beat schedule file
 celerybeat-schedule
@@ -79,13 +80,11 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# dotenv
-.env
-
 # virtualenv
 .venv
 venv/
 ENV/
+.env
 
 # Spyder project settings
 .spyderproject
@@ -110,5 +109,7 @@ ENV/
 # Gradle files
 /.gradle
 
-#vscode
-.vscode
+# VSCode
+.vscode/
+*.code-workspace
+

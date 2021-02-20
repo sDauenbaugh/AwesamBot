@@ -18,9 +18,10 @@ class BallChase(State):
         """Creates an unexpired instance of BallChase"""
         super().__init__()
         
-    def get_expired(self, game_info: GameInformation):
+    def check_expired(self, game_info: GameInformation) -> bool:
         """Determines if the state is no longer useful"""
-        return True
+        self.expired = True
+        return self.expired
     
     def execute(self, game_info: GameInformation):
         """Attempts to drive the car toward the ball.
@@ -37,4 +38,5 @@ class BallChase(State):
         """
         
         target_location = game_info.ball.local_location
+        self.debug['target'] = game_info.ball.location
         return ground_controller(game_info, target_location)

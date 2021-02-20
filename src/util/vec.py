@@ -1,7 +1,9 @@
 import math
+from typing import Union
+
+from rlbot.utils.structures.game_data_struct import Vector3
 
 
-# This is a helper class for vector math. You can extend it or delete if you want.
 class Vec3:
     """
     This class should provide you with all the basic vector operations that you need, but feel free to extend its
@@ -13,8 +15,14 @@ class Vec3:
 
     When in doubt visit the wiki: https://github.com/RLBot/RLBot/wiki/Useful-Game-Values
     """
+    # https://docs.python.org/3/reference/datamodel.html#slots
+    __slots__ = [
+        'x',
+        'y',
+        'z'
+    ]
 
-    def __init__(self, x: float or 'Vec3'=0, y: float=0, z: float=0):
+    def __init__(self, x: Union[float, 'Vec3', 'Vector3']=0, y: float=0, z: float=0):
         """
         Create a new Vec3. The x component can alternatively be another vector with an x, y, and z component, in which
         case the created vector is a copy of the given vector and the y and z parameter is ignored. Examples:
@@ -58,13 +66,16 @@ class Vec3:
         return self * scale
 
     def __str__(self):
-        return "Vec3(" + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + ")"
+        return f"Vec3({self.x:.2f}, {self.y:.2f}, {self.z:.2f})"
+
+    def __repr__(self):
+        return self.__str__()
 
     def __eq__(self, v):
-        if(self.x == v.x and self.y == v.y and self.z == v.z):
+        if self.x == v.x and self.y == v.y and self.z == v.z:
             return True
         return False
-    
+
     def __ne__(self, v):
         return not self == v
 
@@ -82,9 +93,10 @@ class Vec3:
 
     def normalized(self):
         """Returns a vector with the same direction but a length of one."""
-        if(self.length() == 0):
-            return Vec3(0,0,0)
-        return self / self.length()
+        if self.length() == 0:
+            return self
+        else:
+            return self / self.length()
 
     def rescale(self, new_len: float) -> 'Vec3':
         """Returns a vector with the same direction but a different length."""
@@ -106,14 +118,13 @@ class Vec3:
         """Returns the angle to the ideal vector. Angle will be between 0 and pi."""
         cos_ang = self.dot(ideal) / (self.length() * ideal.length())
         return math.acos(cos_ang)
-    
-    #returns the Vector3 as a python triple
+
     def to_triple(self):
         return [self.x, self.y, self.z]
 
     def rotate90(self, direction = 1):
         rotated = Vec3(self.y, self.x, self.z)
-        if(direction == -1):
+        if direction == -1:
             rotated.x = rotated.x * -1
         else:
             rotated.y = rotated.y * -1

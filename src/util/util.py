@@ -152,4 +152,3 @@ def generate_sin_lookup(rads):
 def generate_cos_lookup(rads):
     theta = np.arange(0, 2*np.pi, rads)
     return np.cos(theta)
-    

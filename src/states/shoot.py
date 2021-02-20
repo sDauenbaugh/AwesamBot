@@ -5,6 +5,7 @@ from controllers.groundController import ground_controller
 
 from util import util
 from util.gameinformation import GameInformation
+from util.orientation import relative_location
 
 
 class Shoot(State):
@@ -21,10 +22,11 @@ class Shoot(State):
         """Creates an unexpired instance of Shoot"""
         super().__init__()
 
-    def get_expired(self, game_info: GameInformation):
+    def check_expired(self, game_info: GameInformation) -> bool:
         """Determines if the state is no longer useful"""
-        if util.sign(game_info.ball.location.y) == util.sign(game_info.team):
+        if util.sign(game_info.ball.location.y) == util.sign(game_info.me.team):
             self.expired = True
+        return self.expired
 
     def execute(self, game_info: GameInformation):
         """Attempts to drive into the ball in a direction that hits the ball towards the goal.
@@ -46,6 +48,7 @@ class Shoot(State):
         direction_to_goal = ball_to_goal.normalized()
 
         aim_location = game_info.ball.location - (direction_to_goal * util.BALL_RADIUS)
-        local_target = util.relative_location(game_info.me.location, game_info.me.rotation, aim_location)
+        local_target = relative_location(game_info.me.location, game_info.me.rotation, aim_location)
+        self.debug['target'] = aim_location
 
         return ground_controller(game_info, local_target)
