@@ -9,6 +9,7 @@ from util import util
 from util.boost_pad_tracker import BoostPadTracker
 from util.gameinformation import GameInformation
 from util.orientation import Orientation, relative_location
+from util.sequence import Sequence
 from util.vec import Vec3
 
 
@@ -27,7 +28,7 @@ class MyBot(BaseAgent):
 
     def __init__(self, name, team, index):
         super().__init__(name, team, index)
-        # self.active_sequence: Sequence = None
+        self.active_sequence: Sequence = None
         self.boost_pad_tracker = BoostPadTracker()
 
         self.controller_state = SimpleControllerState()
@@ -64,24 +65,37 @@ class MyBot(BaseAgent):
         debug_mode = True
         debug_change = False
 
+        # Keep our boost pad info updated with which pads are currently active
+        self.boost_pad_tracker.update_boost_status(game_packet)
+
         self.preprocess(game_packet)
 
         game_info = GameInformation(self.me, self.ball)
 
-        if self.state.check_expired(game_info):
-            debug_change = True
-            if util.sign(self.ball.location.y) == util.sign(self.me.team):
-                self.state = st.Defend()
-                self.state_message = "Defending"
-            elif util.sign(self.ball.location.y) != util.sign(self.me.team):
-                self.state = st.AimShot()
-                self.state_message = "Shooting"
+        # if there is an active sequence then that gets priority and no other state or controller calculations are done
+        if self.active_sequence is not None and not self.active_sequence.done:
+            self.controller_state = self.active_sequence.tick(game_packet)
+        # if there is no active sequence we proceed with normal state calculations
+        else:
+            # get new state if expired
+            if self.state.check_expired(game_info):
+                debug_change = True
+                if util.sign(self.ball.location.y) == util.sign(self.me.team):
+                    self.state = st.Defend()
+                    self.state_message = "Defending"
+                elif util.sign(self.ball.location.y) != util.sign(self.me.team):
+                    self.state = st.AimShot()
+                    self.state_message = "Shooting"
+                else:
+                    self.state = st.BallChase()
+                    self.state_message = "Chasing"
+            # execute the current state
+            self.state.execute(game_info)
+            if self.state.has_sequence():
+                self.active_sequence = self.state.get_sequence()
+                self.controller_state = self.active_sequence.tick(game_packet)
             else:
-                self.state = st.BallChase()
-                self.state_message = "Chasing"
-
-        self.state.execute(game_info)
-        self.controller_state = self.state.get_next_controller_state()
+                self.controller_state = self.state.get_next_controller_state()
 
         team = util.sign(self.team)
         ball_side = util.sign(self.ball.location.y)
