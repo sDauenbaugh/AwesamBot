@@ -80,7 +80,8 @@ class MyBot(BaseAgent):
                 self.state = st.BallChase()
                 self.state_message = "Chasing"
 
-        self.controller_state = self.state.execute(game_info)
+        self.state.execute(game_info)
+        self.controller_state = self.state.get_next_controller_state()
 
         team = util.sign(self.team)
         ball_side = util.sign(self.ball.location.y)

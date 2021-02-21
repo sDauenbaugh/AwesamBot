@@ -39,4 +39,4 @@ class BallChase(State):
         
         target_location = game_info.ball.local_location
         self.debug['target'] = game_info.ball.location
-        return ground_controller(game_info, target_location)
+        self.next_controller_state = ground_controller(game_info, target_location)

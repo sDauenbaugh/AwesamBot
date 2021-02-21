@@ -32,5 +32,5 @@ class Defend(State):
         target_location = relative_location(game_info.me.location, game_info.me.rotation, aim_location)
         self.debug['target'] = aim_location
 
-        return ground_controller(game_info, target_location)
+        self.next_controller_state = ground_controller(game_info, target_location)
 

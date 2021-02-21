@@ -27,4 +27,4 @@ class AimShot(State):
     def execute(self, game_info):
         team = util.sign(game_info.me.team)
 
-        return hit_controller(game_info, util.GOAL_HOME * team * -1)
+        self.next_controller_state =  hit_controller(game_info, util.GOAL_HOME * team * -1)
