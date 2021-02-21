@@ -1,5 +1,6 @@
 import math
 
+from controllers.groundController import ground_controller
 from controllers.hitController import hit_controller
 from states.state import State
 from util import util
@@ -27,4 +28,4 @@ class AimShot(State):
     def execute(self, game_info):
         team = util.sign(game_info.me.team)
 
-        self.next_controller_state =  hit_controller(game_info, util.GOAL_HOME * team * -1)
+        self.next_controller_state = ground_controller(game_info, util.GOAL_HOME * team * -1)

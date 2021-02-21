@@ -70,7 +70,7 @@ class State:
             False if there is no sequence
 
         """
-        return self.sequence is None
+        return self.sequence is not None
 
     def get_sequence(self):
         """ Returns the sequence stored by the state
@@ -79,7 +79,9 @@ class State:
             Sequence of SimpleControllerState objects
 
         """
-        return self.sequence
+        seq = self.sequence
+        self.sequence = None
+        return seq
 
     def get_next_controller_state(self) -> SimpleControllerState:
         """ Returns the next SimpleControllerState to execute.

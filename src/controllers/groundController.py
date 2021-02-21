@@ -27,12 +27,14 @@ def ground_controller(game_info, target_location):
     turn_rate = 0.0
     r1 = 250
     r2 = 1000
+    # adjust angle
+    if angle > 0.05:
+        turn_rate = -1.0
+    elif angle < -0.05:
+        turn_rate = 1.0
+    else:
+        turn_rate = 0
     if distance <= r1:
-        # calculate turn direction
-        if angle > 0:
-            turn_rate = -1.0
-        elif angle < 0:
-            turn_rate = 1.0
         # if toward ball move forward
         if abs(angle) < math.pi / 4:
             speed = 1.0
@@ -45,17 +47,8 @@ def ground_controller(game_info, target_location):
         speed = 1.0
         if game_info.me.velocity.length() < 2250:
             controller_state.boost = True
-        if angle > math.pi/32:
-            turn_rate = -1.0
-        elif angle < -math.pi/32:
-            turn_rate = 1.0
     # if mid range, adjust forward
     else:
-        # adjust angle
-        if angle > math.pi/32:
-            turn_rate = -1.0
-        elif angle < -math.pi/32:
-            turn_rate = 1.0
         # adjust speed
         if game_info.me.velocity.length() < 2250:
             controller_state.boost = True

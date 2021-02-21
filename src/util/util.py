@@ -80,7 +80,7 @@ def turn_radius(velocity):
     Values come from the RLBot wiki.
     
     Args:
-        v (float): magnitude of the car's velocity
+        velocity (float): magnitude of the car's velocity
         
     Returns:
         float: the tightest radius the car can turn at given the velocity.

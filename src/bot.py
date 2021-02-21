@@ -34,18 +34,18 @@ class MyBot(BaseAgent):
         self.controller_state = SimpleControllerState()
         self.me = Car()
         self.ball = Ball()
+        self.kickoff_flag = False
 
-        self.state = st.BallChase()
-        self.state_message = "Whoops"
+        self.state = st.State()
+        self.state_message = "State"
 
     def initialize_agent(self):
         """The setup function that runs once when the bot is created."""
         self.controller_state = SimpleControllerState()
-        self.me = Car()
-        self.ball = Ball()
+        self.kickoff_flag = False
 
-        self.state = st.BallChase()
-        self.state_message = "Whoops"
+        self.state = st.Kickoff()
+        self.state_message = "Kickoff"
 
     def get_output(self, game_packet: GameTickPacket) -> SimpleControllerState:
         """Calculates the next set of commands for the bot.
@@ -66,7 +66,12 @@ class MyBot(BaseAgent):
         debug_change = False
 
         # Keep our boost pad info updated with which pads are currently active
-        self.boost_pad_tracker.update_boost_status(game_packet)
+        # self.boost_pad_tracker.update_boost_status(game_packet)
+
+        # clear active_sequence when kickoff is starting
+        if self.kickoff_flag is False and game_packet.game_info.is_round_active and \
+                game_packet.game_info.is_kickoff_pause:
+            self.active_sequence = None
 
         self.preprocess(game_packet)
 
@@ -77,18 +82,22 @@ class MyBot(BaseAgent):
             self.controller_state = self.active_sequence.tick(game_packet)
         # if there is no active sequence we proceed with normal state calculations
         else:
+            # kickoff state get priority
+            if self.kickoff_flag:
+                self.state = st.Kickoff()
+                self.state_message = "Kickoff"
             # get new state if expired
-            if self.state.check_expired(game_info):
+            elif self.state.check_expired(game_info):
                 debug_change = True
                 if util.sign(self.ball.location.y) == util.sign(self.me.team):
                     self.state = st.Defend()
-                    self.state_message = "Defending"
+                    self.state_message = "Defend"
                 elif util.sign(self.ball.location.y) != util.sign(self.me.team):
-                    self.state = st.AimShot()
-                    self.state_message = "Shooting"
+                    self.state = st.Shoot()
+                    self.state_message = "Shoot"
                 else:
                     self.state = st.BallChase()
-                    self.state_message = "Chasing"
+                    self.state_message = "BallChase"
             # execute the current state
             self.state.execute(game_info)
             if self.state.has_sequence():
@@ -139,11 +148,15 @@ class MyBot(BaseAgent):
 
         self.ball.local_location = relative_location(self.me.location, self.me.rotation, self.ball.location)
 
-    def draw_debug(self, action_display=None, target = None):
+        # flag that kickoff is occurring
+        self.kickoff_flag = game_packet.game_info.is_round_active and game_packet.game_info.is_kickoff_pause
+
+    def draw_debug(self, action_display=None, target=None):
         """Draws debug information on screen.
 
         Args:
             action_display: message to display describing the car's current action
+            target: location that the bot is targeting
 
         Returns:
             This function has no returns, but instead draws information directly to the screen.
