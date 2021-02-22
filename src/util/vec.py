@@ -122,10 +122,16 @@ class Vec3:
     def to_triple(self):
         return [self.x, self.y, self.z]
 
-    def rotate90(self, direction = 1):
+    def rotate90(self, direction=1):
         rotated = Vec3(self.y, self.x, self.z)
         if direction == -1:
             rotated.x = rotated.x * -1
         else:
             rotated.y = rotated.y * -1
         return rotated
+
+    # returns counter-clockwise angle where <1,0> is 0 radians, plane is left handed (+x is forward, +y is right)
+    # ex: <0,1,0> -> -pi/2 rads
+    # ex: <2,-2,11> -> +pi/4 rads
+    def angle_of(self):
+        return -math.atan2(self.y, self.x)

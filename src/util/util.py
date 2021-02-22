@@ -152,3 +152,11 @@ def generate_sin_lookup(rads):
 def generate_cos_lookup(rads):
     theta = np.arange(0, 2*np.pi, rads)
     return np.cos(theta)
+
+
+def is_on_target_2d(position, velocity, target_left_bound, target_right_bound) -> bool:
+    # returns true if the given position and velocity are directed between two points
+    left_bound = (target_left_bound.flat() - position.flat()).angle_of()
+    right_bound = (target_right_bound.flat() - position.flat()).angle_of()
+    ang = velocity.angle_of()
+    return left_bound >= ang >= right_bound

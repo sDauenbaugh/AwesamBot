@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 
 import src.util.util as util
+from util.vec import Vec3
 
 
 class UtilSmokeTestCase(unittest.TestCase):
@@ -35,3 +36,10 @@ class UtilSmokeTestCase(unittest.TestCase):
         root = 1/np.sqrt(2)
         table = np.round(np.array([1.00, root, 0.00, -root, -1.00, -root, 0.00, root]), 4)
         self.assertTrue(np.array_equal(lookup, table))
+
+    def test_on_target_2d(self):
+        pos = Vec3(100, 100, 0)
+        vel = Vec3(10, 10, 73)
+        left = Vec3(230, 200, 0)
+        right = Vec3(190, 200, 0)
+        self.assertTrue(util.is_on_target_2d(pos, vel, left, right))
