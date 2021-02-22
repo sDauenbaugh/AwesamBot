@@ -28,9 +28,9 @@ def ground_controller(game_info, target_location):
     r1 = 250
     r2 = 1000
     # adjust angle
-    if angle > 0.05:
+    if angle > 0.02:
         turn_rate = -1.0
-    elif angle < -0.05:
+    elif angle < -0.02:
         turn_rate = 1.0
     else:
         turn_rate = 0

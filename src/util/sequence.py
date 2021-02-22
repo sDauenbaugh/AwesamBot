@@ -1,3 +1,5 @@
+import math as m
+
 from dataclasses import dataclass
 from typing import List
 
@@ -61,3 +63,20 @@ class Sequence:
         # If we reach here, we ran out of steps to attempt.
         self.done = True
         return None
+
+
+# performs a flip at a specified angle, option to add boost
+# default angle is a front flip, default is no boost
+def flip_sequence(angle=0, boosting=False) -> Sequence:
+    # angle runs counter-clockwise
+    desired_pitch = -m.cos(angle)
+    desired_yaw = -m.sin(angle)
+    seq = Sequence([
+        ControlStep(duration=0.5, controls=SimpleControllerState(boost=boosting)),
+        ControlStep(duration=0.05, controls=SimpleControllerState(jump=True, boost=boosting)),
+        ControlStep(duration=0.05, controls=SimpleControllerState(jump=False, boost=boosting)),
+        ControlStep(duration=0.2,
+                    controls=SimpleControllerState(jump=True, pitch=desired_pitch, yaw=desired_yaw, boost=boosting)),
+        ControlStep(duration=0.7, controls=SimpleControllerState()),
+    ])
+    return seq
