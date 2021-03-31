@@ -4,3 +4,4 @@ from .defendbasic import Defend
 from .shoot import Shoot
 from .aimshot import AimShot
 from .kickoff import Kickoff
+from .rotateBackpost import RotateBackpost

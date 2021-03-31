@@ -82,6 +82,7 @@ class MyBot(BaseAgent):
             self.controller_state = self.active_sequence.tick(game_packet)
         # if there is no active sequence we proceed with normal state calculations
         else:
+            """
             # kickoff state get priority
             if self.kickoff_flag:
                 self.state = st.Kickoff()
@@ -98,6 +99,9 @@ class MyBot(BaseAgent):
                 else:
                     self.state = st.BallChase()
                     self.state_message = "BallChase"
+            """
+            self.state = st.BallChase()
+            self.state_message = "BallChase"
             # execute the current state
             self.state.execute(game_info)
             if self.state.has_sequence():
